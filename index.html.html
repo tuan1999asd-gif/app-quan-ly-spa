@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ngọc Nguyễn Center - App nội bộ</title>
+  <style>
+    :root{
+      --bg:#f5f1ec; --card:#ffffff; --dark:#251c17; --brown:#7b4f33; --gold:#caa57a;
+      --line:#ead8c8; --soft:#fffaf5; --green:#2f7d46; --red:#a44747; --muted:#7c6252;
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--dark)}
+    button,input,select,textarea{font:inherit} button{cursor:pointer;border:0} .app{min-height:100vh;padding:18px}.wrap{max-width:1280px;margin:auto;display:grid;gap:16px}
+    .header{background:linear-gradient(135deg,#8b5e3c,#5c3b29,#251c17);color:white;border-radius:28px;padding:22px;display:grid;gap:16px}
+    .topline{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.brand{display:flex;gap:12px;align-items:center}.logo{width:48px;height:48px;border-radius:16px;background:var(--gold);color:var(--dark);display:grid;place-items:center;font-weight:900}.brand h1{margin:0;font-size:26px}.brand p{margin:4px 0 0;color:#ffffffbb}.manager{font-size:13px;color:#ffffffc9;text-align:right}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{background:#ffffff20;border-radius:18px;padding:14px}.metric span{display:block;font-size:12px;color:#ffffffb8}.metric b{font-size:21px}.tabs{display:flex;gap:8px;overflow:auto;background:white;border-radius:24px;padding:8px;box-shadow:0 10px 24px #00000010}.tab{padding:12px 16px;border-radius:16px;background:transparent;color:#6d5140;font-weight:800;white-space:nowrap}.tab.active{background:var(--brown);color:white}.notice{background:#edf8ef;color:#226b36;border-radius:16px;padding:12px 16px;font-weight:700}.grid{display:grid;gap:16px}.grid2{grid-template-columns:0.85fr 1.15fr}.grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}.card{background:var(--card);border-radius:26px;padding:18px;box-shadow:0 10px 24px #0000000d}.card h2{margin:0 0 4px;font-size:22px}.sub{margin:0;color:var(--muted);font-size:14px}.field{width:100%;border:1px solid var(--line);background:var(--soft);border-radius:14px;padding:11px 12px;outline:none}.field:focus{border-color:var(--brown)}.label{display:grid;gap:6px;font-size:13px;font-weight:800;color:#6d5140}.form{display:grid;gap:12px}.form2{grid-template-columns:repeat(2,1fr)}.form3{grid-template-columns:repeat(3,1fr)}.btn{background:var(--brown);color:white;border-radius:14px;padding:12px 16px;font-weight:900}.btn.dark{background:var(--dark)}.btn.soft{background:#fff4eb;color:var(--brown)}.btn.red{background:#fff0f0;color:var(--red)}.row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #f2e8df}.row:last-child{border-bottom:0}.row span{color:var(--muted)}.row b{text-align:right}.stat{background:white;border-radius:22px;padding:16px;box-shadow:0 10px 24px #0000000d}.stat span{color:var(--muted);font-size:13px}.stat b{display:block;margin-top:4px;font-size:24px;color:var(--brown)}table{width:100%;border-collapse:collapse;min-width:820px}th,td{padding:11px 10px;text-align:left;border-bottom:1px solid #f1e6dd;font-size:14px}th{background:var(--soft);color:#6d5140;font-weight:900}.tableWrap{overflow:auto;margin-top:12px}.badge{display:inline-flex;border-radius:999px;padding:4px 9px;background:#f3e4d8;color:var(--brown);font-size:12px;font-weight:900}.danger{color:var(--red);font-weight:900}.ok{color:var(--green);font-weight:900}.search{display:flex;gap:8px;align-items:center}.pillList{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.pill{border-radius:999px;background:#fff4eb;color:var(--brown);font-weight:800;padding:8px 12px}.progress{height:10px;background:#f3e4d8;border-radius:999px;overflow:hidden}.bar{height:100%;background:var(--brown)}.usedDates{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.usedDates span{background:white;border:1px solid #f0e0d3;border-radius:999px;padding:5px 9px;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.muted{color:var(--muted)}.right{text-align:right}.hidden{display:none!important}
+    @media(max-width:900px){.metrics,.grid2,.grid3,.grid4,.form2,.form3{grid-template-columns:1fr}.manager{text-align:left}.app{padding:10px}.header{border-radius:22px}.card{border-radius:20px}}
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const WORK_START = '09:00';
+const WORK_END = '18:00';
+const MANAGER_EMAIL = 'tuan1999asd@gmail.com';
+const DEFAULT = {
+  staff:[
+    {id:'manager', name:'Ngọc Tuấn Phùng', role:'Quản lý', target:120000000},
+    {id:'ngoc-van', name:'Ngọc Vân', role:'Sale', target:60000000},
+    {id:'phu-tam', name:'Phú Tâm', role:'KTV', target:50000000},
+    {id:'thao-han', name:'Thảo Hân', role:'Lễ tân', target:40000000}
+  ],
+  services:[
+    {id:'csd-basic', code:'CSD-01', name:'Chăm sóc da cơ bản', price:1199000, sessions:5},
+    {id:'csd-pro', code:'CSD-02', name:'Chăm sóc da chuyên sâu', price:1599000, sessions:5},
+    {id:'peel', code:'PEEL-01', name:'Peel da sinh học', price:2399000, sessions:3},
+    {id:'tl-exp', code:'TL-01', name:'Triệt lông trải nghiệm', price:79000, sessions:1},
+    {id:'tl-nach', code:'TL-02', name:'Triệt nách', price:399000, sessions:5},
+    {id:'tl-mep', code:'TL-03', name:'Triệt mép', price:399000, sessions:5},
+    {id:'tl-cam', code:'TL-04', name:'Triệt cằm', price:399000, sessions:5},
+    {id:'tl-half-arm', code:'TL-05', name:'Triệt 1/2 tay', price:399000, sessions:5},
+    {id:'tl-full-arm', code:'TL-06', name:'Triệt full tay', price:599000, sessions:5},
+    {id:'tl-half-leg', code:'TL-07', name:'Triệt 1/2 chân', price:399000, sessions:5},
+    {id:'tl-full-leg', code:'TL-08', name:'Triệt full chân', price:599000, sessions:5},
+    {id:'tl-bikini', code:'TL-09', name:'Triệt bikini', price:599000, sessions:5},
+    {id:'tl-back', code:'TL-10', name:'Triệt lưng', price:699000, sessions:5},
+    {id:'tl-body', code:'TL-11', name:'Triệt full body', price:2999000, sessions:5}
+  ],
+  sales:[
+    {id:'s1', date:'2026-06-01', customer:'Nguyễn Thanh Mai', phone:'0988123456', serviceId:'csd-pro', staffId:'ngoc-van', revenue:10000000, paid:1000000, note:'Chốt 10tr, khách trả trước 1tr'},
+    {id:'s2', date:'2026-06-01', customer:'Trần Mỹ Linh', phone:'0933555666', serviceId:'tl-full-leg', staffId:'thao-han', revenue:599000, paid:300000, note:'Khách cọc trước'}
+  ],
+  tours:[
+    {id:'t1', customer:'Nguyễn Thanh Mai', phone:'0988123456', serviceId:'csd-pro', total:5, used:['2026-06-01 09:40','2026-06-04 10:15']},
+    {id:'t2', customer:'Trần Mỹ Linh', phone:'0933555666', serviceId:'tl-full-leg', total:5, used:['2026-06-03 14:00']}
+  ],
+  attendance:[
+    {id:'a1', staffId:'ngoc-van', date:'2026-06-01', inAt:'2026-06-01 08:56', outAt:'2026-06-01 18:03'}
+  ]
+};
+let state = load();
+let activeTab = 'attendance';
+let noticeTimer = null;
+
+function load(){
+  const raw = localStorage.getItem('spaInternalAppData');
+  if(!raw) return structuredClone(DEFAULT);
+  try { return JSON.parse(raw); } catch { return structuredClone(DEFAULT); }
+}
+function save(){ localStorage.setItem('spaInternalAppData', JSON.stringify(state)); }
+function uid(prefix){ return `${prefix}-${Date.now()}-${Math.floor(Math.random()*9999)}`; }
+function pad(n){ return String(n).padStart(2,'0'); }
+function nowText(){ const d=new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`; }
+function today(){ return nowText().slice(0,10); }
+function money(v){ return Number(v||0).toLocaleString('vi-VN')+'đ'; }
+function byId(list,id){ return list.find(x=>x.id===id); }
+function serviceName(id){ return byId(state.services,id)?.name || '—'; }
+function staffName(id){ return byId(state.staff,id)?.name || '—'; }
+function debt(s){ return Math.max(0, Number(s.revenue||0)-Number(s.paid||0)); }
+function sumSales(rows){ const revenue=rows.reduce((a,s)=>a+Number(s.revenue||0),0); const paid=rows.reduce((a,s)=>a+Number(s.paid||0),0); return {revenue,paid,debt:Math.max(0,revenue-paid)}; }
+function inStatus(a){ if(!a?.inAt) return 'Chưa vào'; return a.inAt.slice(11,16) > WORK_START ? 'Đi muộn' : 'Đúng giờ'; }
+function outStatus(a){ if(!a?.outAt) return 'Chưa về'; return a.outAt.slice(11,16) < WORK_END ? 'Về sớm' : 'Đủ ca'; }
+function show(msg){ clearTimeout(noticeTimer); document.querySelector('#notice')?.remove(); const div=document.createElement('div'); div.id='notice'; div.className='notice'; div.innerHTML=`✓ ${msg}`; document.querySelector('.wrap').insertBefore(div, document.querySelector('#mainContent')); noticeTimer=setTimeout(()=>div.remove(),2200); }
+function setTab(tab){ activeTab = tab; render(); }
+function row(label,value,strong=false){ return `<div class="row"><span>${label}</span><b class="${strong?'ok':''}">${value}</b></div>`; }
+function stat(label,value){ return `<div class="stat"><span>${label}</span><b>${value}</b></div>`; }
+function card(title,sub,body){ return `<section class="card"><h2>${title}</h2>${sub?`<p class="sub">${sub}</p>`:''}${body}</section>`; }
+function selectHtml(id, options, selected){ return `<select id="${id}" class="field">${options.map(o=>`<option value="${o.value}" ${o.value===selected?'selected':''}>${o.label}</option>`).join('')}</select>`; }
+
+function render(){
+  const todaySummary = sumSales(state.sales.filter(s=>s.date===today()));
+  const tabs = [
+    ['attendance','Chấm công','⏱'], ['sale','Chốt dịch vụ','💰'], ['revenue','Doanh thu','📊'], ['customer','Hồ sơ khách','🔎'], ['services','Dịch vụ','📋'], ['backup','Sao lưu','💾']
+  ];
+  document.getElementById('app').innerHTML = `
+    <div class="app"><div class="wrap">
+      <header class="header">
+        <div class="topline">
+          <div class="brand"><div class="logo">NN</div><div><h1>Ngọc Nguyễn Center</h1><p>App nội bộ hoàn chỉnh · Lưu trên trình duyệt · Có thể deploy lấy link</p></div></div>
+          <div class="manager">Quản lý chính<br><b>${MANAGER_EMAIL}</b></div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><span>Doanh thu hôm nay</span><b>${money(todaySummary.revenue)}</b></div>
+          <div class="metric"><span>Thực thu hôm nay</span><b>${money(todaySummary.paid)}</b></div>
+          <div class="metric"><span>Còn phải thu</span><b>${money(todaySummary.debt)}</b></div>
+          <div class="metric"><span>Giờ làm</span><b>${WORK_START} - ${WORK_END}</b></div>
+        </div>
+      </header>
+      <nav class="tabs">${tabs.map(t=>`<button class="tab ${activeTab===t[0]?'active':''}" onclick="setTab('${t[0]}')">${t[2]} ${t[1]}</button>`).join('')}</nav>
+      <main id="mainContent">${renderTab()}</main>
+    </div></div>`;
+  bindEvents();
+}
+
+function renderTab(){
+  if(activeTab==='attendance') return renderAttendance();
+  if(activeTab==='sale') return renderSale();
+  if(activeTab==='revenue') return renderRevenue();
+  if(activeTab==='customer') return renderCustomer();
+  if(activeTab==='services') return renderServices();
+  if(activeTab==='backup') return renderBackup();
+  return '';
+}
+
+function renderAttendance(){
+  const staffOptions = state.staff.map(s=>({value:s.id,label:`${s.name} - ${s.role}`}));
+  const chosen = sessionStorage.getItem('chosenStaff') || state.staff[1]?.id || state.staff[0].id;
+  const rec = state.attendance.find(a=>a.staffId===chosen && a.date===today());
+  const rows = state.attendance.filter(a=>a.date===today());
+  return `<div class="grid grid2">
+    ${card('Chấm công', `Mở app thấy đầu tiên · Ghi chính xác đến từng phút theo thời gian thiết bị`, `
+      <div class="form">
+        <label class="label">Nhân viên${selectHtml('attStaff',staffOptions,chosen)}</label>
+        <div class="roundedBox">${row('Ngày',today())}${row('Giờ hiện tại',nowText().slice(11),true)}${row('Giờ vào',rec?.inAt||'Chưa chấm')}${row('Giờ về',rec?.outAt||'Chưa chấm')}${row('Trạng thái',`${inStatus(rec)} / ${outStatus(rec)}`,true)}</div>
+        <div class="actions"><button class="btn" id="checkInBtn">Chấm vào</button><button class="btn dark" id="checkOutBtn">Chấm về</button></div>
+      </div>`)}
+    ${card('Bảng chấm công hôm nay', 'Gọn: nhân viên, giờ vào, giờ về, trạng thái', `<div class="tableWrap"><table><thead><tr><th>Nhân viên</th><th>Vào</th><th>Về</th><th>Trạng thái</th></tr></thead><tbody>${rows.map(a=>`<tr><td>${staffName(a.staffId)}</td><td>${a.inAt}</td><td>${a.outAt||'—'}</td><td>${inStatus(a)} / ${outStatus(a)}</td></tr>`).join('')}</tbody></table></div>`)}
+  </div>`;
+}
+
+function renderSale(){
+  const serviceOptions = state.services.map(s=>({value:s.id,label:`${s.code} - ${s.name}`}));
+  const staffOptions = state.staff.map(s=>({value:s.id,label:s.name}));
+  return card('Chốt dịch vụ', 'Doanh thu = sale chốt · Thực thu = khách thanh toán thực tế', `
+    <div class="form form2">
+      <label class="label">Tên khách<input id="saleCustomer" class="field"></label>
+      <label class="label">SĐT<input id="salePhone" class="field"></label>
+      <label class="label">Dịch vụ${selectHtml('saleService',serviceOptions,state.services[0].id)}</label>
+      <label class="label">Nhân viên sale${selectHtml('saleStaff',staffOptions,state.staff[1]?.id||state.staff[0].id)}</label>
+      <label class="label">Ngày chốt<input id="saleDate" type="date" class="field" value="${today()}"></label>
+      <label class="label">Doanh thu<input id="saleRevenue" type="number" class="field" placeholder="VD: 10000000"></label>
+      <label class="label">Thực thu<input id="salePaid" type="number" class="field" placeholder="VD: 1000000"></label>
+      <div class="roundedBox">${row('Còn phải thu','Tự tính sau khi lưu',true)}${row('Liệu trình','Tự tạo theo số buổi dịch vụ')}</div>
+    </div>
+    <button class="btn" id="saveSaleBtn" style="margin-top:12px">Lưu chốt dịch vụ</button>
+  `);
+}
+
+function renderRevenue(){
+  const total = sumSales(state.sales);
+  return `<div class="grid">
+    <div class="grid grid3">${stat('Tổng doanh thu',money(total.revenue))}${stat('Tổng thực thu',money(total.paid))}${stat('Tổng còn phải thu',money(total.debt))}</div>
+    ${card('Bảng doanh thu', 'Gọn: khách, dịch vụ, sale, doanh thu, thực thu, còn phải thu', `<div class="tableWrap"><table><thead><tr><th>Ngày</th><th>Khách</th><th>Dịch vụ</th><th>Sale</th><th>Doanh thu</th><th>Thực thu</th><th>Còn</th><th></th></tr></thead><tbody>${state.sales.map(s=>`<tr><td>${s.date}</td><td><b>${s.customer}</b><div class="muted">${s.phone}</div></td><td>${serviceName(s.serviceId)}</td><td>${staffName(s.staffId)}</td><td><b>${money(s.revenue)}</b></td><td><b>${money(s.paid)}</b></td><td>${money(debt(s))}</td><td class="right"><button class="danger" onclick="deleteSale('${s.id}')">Xóa</button></td></tr>`).join('')}</tbody></table></div>`)}
+  </div>`;
+}
+
+function renderCustomer(){
+  const q = sessionStorage.getItem('customerQuery') || '';
+  const foundSales = state.sales.filter(s=>`${s.customer} ${s.phone}`.toLowerCase().includes(q.toLowerCase()));
+  const foundTours = state.tours.filter(t=>`${t.customer} ${t.phone}`.toLowerCase().includes(q.toLowerCase()));
+  const summary = sumSales(foundSales);
+  return `<div class="grid">
+    ${card('Hồ sơ khách', 'Nhập tên hoặc SĐT để xem khách mua gì, đã làm ngày nào, còn mấy buổi', `<div class="search"><input id="customerSearch" value="${q}" class="field" placeholder="Tên khách / SĐT"></div>`)}
+    ${q?`<div class="grid grid3">${stat('Doanh thu',money(summary.revenue))}${stat('Thực thu',money(summary.paid))}${stat('Còn thu',money(summary.debt))}</div>`:''}
+    ${q?card('Liệu trình', '', `<div class="grid grid2">${foundTours.map(t=>{const used=t.used?.length||0, remain=Math.max(0,t.total-used); return `<div class="card" style="box-shadow:none;background:#fffaf5"><b>${t.customer}</b><p class="sub">${serviceName(t.serviceId)} · ${t.phone}</p><div class="grid grid3" style="margin-top:8px">${info('ĐK',t.total)}${info('Dùng',used)}${info('Còn',remain)}</div><div class="usedDates">${(t.used||[]).map((d,i)=>`<span>B${i+1}: ${d}</span>`).join('') || '<span>Chưa dùng buổi nào</span>'}</div><button class="btn soft" onclick="useTour('${t.id}')" style="margin-top:10px">+ Đã làm 1 buổi</button></div>`}).join('') || '<p class="muted">Chưa có liệu trình.</p>'}</div>`):''}
+  </div>`;
+}
+function info(label,value){return `<div class="stat" style="padding:10px;text-align:center"><span>${label}</span><b style="font-size:18px">${value}</b></div>`}
+
+function renderServices(){
+  return card('Dịch vụ', 'Bảng gọn để xem giá gói và số buổi', `<div class="tableWrap"><table><thead><tr><th>Mã</th><th>Dịch vụ</th><th>Giá gói</th><th>Buổi</th></tr></thead><tbody>${state.services.map(s=>`<tr><td>${s.code}</td><td>${s.name}</td><td><b>${money(s.price)}</b></td><td>${s.sessions}</td></tr>`).join('')}</tbody></table></div>`);
+}
+
+function renderBackup(){
+  return card('Sao lưu & chia sẻ', 'Bản này lưu trên trình duyệt. Muốn dùng nhiều máy thật sự cần đưa lên web + database.', `
+    <div class="grid grid2">
+      <div class="roundedBox">${row('Lưu dữ liệu','LocalStorage trên trình duyệt')}${row('Có thể deploy','Netlify / Vercel / hosting tĩnh')}${row('Dùng nhiều nhân viên','Cần database để đồng bộ')}</div>
+      <div class="form"><button class="btn" id="exportBtn">Tải file sao lưu JSON</button><label class="label">Nhập file sao lưu<input id="importFile" type="file" class="field" accept="application/json"></label><button class="btn red" id="resetBtn">Khôi phục dữ liệu mẫu</button></div>
+    </div>`);
+}
+
+function bindEvents(){
+  const attStaff = document.getElementById('attStaff'); if(attStaff) attStaff.onchange=e=>{sessionStorage.setItem('chosenStaff',e.target.value); render();};
+  const checkInBtn = document.getElementById('checkInBtn'); if(checkInBtn) checkInBtn.onclick=()=>{ const staffId=sessionStorage.getItem('chosenStaff') || state.staff[1]?.id || state.staff[0].id; const rec=state.attendance.find(a=>a.staffId===staffId && a.date===today()); if(rec?.inAt) return show('Nhân viên này đã chấm vào hôm nay.'); const now=nowText(); state.attendance.unshift({id:uid('att'),staffId,date:today(),inAt:now,outAt:''}); save(); render(); show(`Đã chấm vào: ${now}`); };
+  const checkOutBtn = document.getElementById('checkOutBtn'); if(checkOutBtn) checkOutBtn.onclick=()=>{ const staffId=sessionStorage.getItem('chosenStaff') || state.staff[1]?.id || state.staff[0].id; const rec=state.attendance.find(a=>a.staffId===staffId && a.date===today()); if(!rec?.inAt) return show('Chưa chấm vào, không thể chấm về.'); if(rec.outAt) return show('Nhân viên này đã chấm về hôm nay.'); rec.outAt=nowText(); save(); render(); show(`Đã chấm về: ${rec.outAt}`); };
+  const saveSaleBtn = document.getElementById('saveSaleBtn'); if(saveSaleBtn) saveSaleBtn.onclick=saveSale;
+  const customerSearch = document.getElementById('customerSearch'); if(customerSearch) customerSearch.oninput=e=>{sessionStorage.setItem('customerQuery',e.target.value); render();};
+  const exportBtn = document.getElementById('exportBtn'); if(exportBtn) exportBtn.onclick=exportData;
+  const resetBtn = document.getElementById('resetBtn'); if(resetBtn) resetBtn.onclick=()=>{ if(confirm('Khôi phục dữ liệu mẫu?')){ state=structuredClone(DEFAULT); save(); render(); show('Đã khôi phục dữ liệu mẫu.'); }};
+  const importFile = document.getElementById('importFile'); if(importFile) importFile.onchange=importData;
+}
+function saveSale(){
+  const customer=document.getElementById('saleCustomer').value.trim();
+  const phone=document.getElementById('salePhone').value.trim();
+  const serviceId=document.getElementById('saleService').value;
+  const staffId=document.getElementById('saleStaff').value;
+  const date=document.getElementById('saleDate').value;
+  const service=byId(state.services,serviceId);
+  const revenue=Number(document.getElementById('saleRevenue').value || service?.price || 0);
+  const paid=Number(document.getElementById('salePaid').value || 0);
+  if(!customer || !phone) return show('Cần nhập tên khách và SĐT.');
+  state.sales.unshift({id:uid('sale'),date,customer,phone,serviceId,staffId,revenue,paid,note:''});
+  state.tours.unshift({id:uid('tour'),customer,phone,serviceId,total:service?.sessions||1,used:[]});
+  save(); render(); show('Đã lưu doanh thu, thực thu và liệu trình.');
+}
+function deleteSale(id){ state.sales = state.sales.filter(s=>s.id!==id); save(); render(); show('Đã xóa dòng doanh thu.'); }
+function useTour(id){ const t=state.tours.find(x=>x.id===id); if(!t) return; if((t.used||[]).length >= t.total) return show('Khách đã dùng hết số buổi.'); t.used.push(nowText()); save(); render(); show('Đã cộng 1 buổi sử dụng.'); }
+function exportData(){ const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`spa-app-backup-${today()}.json`; a.click(); URL.revokeObjectURL(a.href); }
+function importData(e){ const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ try{ state=JSON.parse(reader.result); save(); render(); show('Đã nhập dữ liệu sao lưu.'); }catch{ show('File không hợp lệ.'); } }; reader.readAsText(file); }
+
+// small helper style
+const style=document.createElement('style'); style.textContent='.roundedBox{border-radius:18px;background:#fffaf5;padding:14px}'; document.head.appendChild(style);
+render();
+</script>
+</body>
+</html>
